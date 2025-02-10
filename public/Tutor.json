@@ -1,0 +1,59 @@
+[
+        {
+          "name": "Jane Smith",
+          "email": "jane@example.com",
+          "subject": "Mathematics",
+          "profilePicture": "https://i.ibb.co.com/SfRxNRT/Jane-Smith.jpg",
+          "bio": "An experienced math tutor with a passion for helping students excel in algebra and calculus."
+        },
+        {
+          "name": "John Doe",
+          "email": "john@example.com",
+          "subject": "Physics",
+          "profilePicture": "https://i.ibb.co.com/cYLDq9y/John-Doe.jpg",
+          "bio": "Physics enthusiast with over 10 years of teaching experience, specializing in mechanics and thermodynamics."
+        },
+        {
+          "name": "Sarah Lee",
+          "email": "sarah@example.com",
+          "subject": "Chemistry",
+          "profilePicture": "https://i.ibb.co.com/RpgHpRh/Sarah-Lee.jpg",
+          "bio": "A dedicated chemistry educator, making complex chemical concepts easy to understand."
+        },
+        {
+          "name": "Michael Brown",
+          "email": "michael@example.com",
+          "subject": "Programming",
+          "profilePicture": "https://i.ibb.co.com/m8FQ8s6/Michael-Brown.jpg",
+          "bio": "Expert in Python and JavaScript with a knack for simplifying programming for beginners."
+        },
+        {
+          "name": "Emily White",
+          "email": "emily@example.com",
+          "subject": "Creative Writing",
+          "profilePicture": "https://i.ibb.co.com/PQ3LRSg/Emily-White.jpg",
+          "bio": "Creative writing tutor, helping students enhance their storytelling and expression skills."
+        },
+        {
+          "name": "Anna Taylor",
+          "email": "anna@example.com",
+          "subject": "Biology",
+          "profilePicture": "https://i.ibb.co.com/LxTXDcL/Anna-Taylor.jpg",
+          "bio": "Biology educator focused on fostering curiosity and a deeper understanding of life sciences."
+        },
+        {
+          "name": "Sophia Green",
+          "email": "sophia@example.com",
+          "subject": "Art History",
+          "profilePicture": "https://i.ibb.co.com/mC95K3W/Sophia-Green.webp",
+          "bio": "Art historian with a passion for exploring and teaching the evolution of art across cultures."
+        },
+        {
+          "name": "David Wilson",
+          "email": "david@example.com",
+          "subject": "Digital Marketing",
+          "profilePicture": "https://i.ibb.co.com/Yj1YYB4/David-Wilson.jpg",
+          "bio": "Digital marketing expert, teaching students how to navigate the ever-changing online landscape."
+        }
+      ]
+      

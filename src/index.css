@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body{
+        font-family: "Poppins", sans-serif;
+    }
+
+
+    .ql-editor ol {
+        list-style-type: decimal;
+        padding-left: 20px;
+      }
+      
+      .ql-editor ul {
+        list-style-type: disc;
+        padding-left: 20px;
+      }
+      
+      .ql-editor li {
+        margin-bottom: 5px;
+      }
+
+      .ql-editor img {
+        max-width: 300px;  /* Adjust this to whatever size you want */
+        width: 100%; /* Ensures it scales responsively */
+        height: auto;
+      }
+
+      .ql-editor ol {
+        list-style-type: decimal !important; /* Ensures the list is ordered */
+        padding-left: 20px;
+      }
+
+
+      .ql-editor ol {
+        counter-reset: list-counter;
+        list-style-type: decimal !important;
+      }
+      
+      .ql-editor ol li {
+        counter-increment: list-counter;
+      }
+      
+      .ql-editor ol li::before {
+        content: counter(list-counter) ". ";
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      
+      
