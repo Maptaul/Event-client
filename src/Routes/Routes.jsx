@@ -22,6 +22,8 @@ import ViewAllStudySessions from "../Dashboard/tutor/ViewAllStudySessions/ViewAl
 import ViewAllStudyMaterials from "../Dashboard/Viewallstudymaterials/ViewAllStudyMaterials";
 import SessionDetails from "../Dashboard/ViewBookedSession/SessionDetails";
 import ViewBookedSession from "../Dashboard/ViewBookedSession/ViewBookedSession";
+import AboutUs from "../Pages/AboutUs/AboutUs";
+import ContactUs from "../Pages/contact/ContactUs";
 import PrivetRoute from "./PrivetRoute";
 
 export const router = createBrowserRouter([
@@ -48,6 +50,22 @@ export const router = createBrowserRouter([
       {
         path: "AllTutorSection",
         element: <AllTutorSection />,
+      },
+      {
+        path: "aboutUs",
+        element: (
+          <PrivetRoute>
+            <AboutUs />
+          </PrivetRoute>
+        ),
+      },
+      {
+        path: "contact",
+        element: (
+          <PrivetRoute>
+            <ContactUs />
+          </PrivetRoute>
+        ),
       },
       {
         path: "payment",

@@ -17,6 +17,12 @@ const NavBar = () => {
       <li>
         <Link to="/AllTutorSection">All Tutor</Link>
       </li>
+      <li>
+        <Link to="/aboutUs">About Us</Link>
+      </li>
+      <li>
+        <Link to="/contact">Contact Us</Link>
+      </li>
     </>
   );
 
