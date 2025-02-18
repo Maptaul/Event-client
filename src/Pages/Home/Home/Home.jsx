@@ -5,6 +5,7 @@ import ContactMe from "../ContactMe/ContactMe";
 import StudySessions from "../StudySessions/StudySessions";
 import TestimonialSection from "../TestimonialSection/TestimonialSection";
 import TutorSection from "../TutorSection/TutorSection";
+import FrequentlyAsk from "./FrequentlyAsk/FrequentlyAsk";
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <TutorSection />
       <TestimonialSection />
       <ContactMe />
+      <FrequentlyAsk />
     </div>
   );
 };
