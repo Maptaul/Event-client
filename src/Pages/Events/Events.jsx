@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Providers/AuthProviderNew";
+import { API_BASE_URL } from "../../utils/api";
 
 const Events = () => {
   const { user, getAuthToken } = useContext(AuthContext);
@@ -14,7 +15,7 @@ const Events = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:5000/events");
+        const response = await fetch(`${API_BASE_URL}/events`);
         const data = await response.json();
 
         if (response.ok) {
@@ -121,17 +122,14 @@ const Events = () => {
   const handleJoinEvent = async (eventId) => {
     try {
       const token = getAuthToken();
-      const response = await fetch(
-        `http://localhost:5000/events/${eventId}/join`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ userId: user.uid }),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/events/${eventId}/join`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId: user.uid }),
+      });
 
       const data = await response.json();
 
@@ -145,7 +143,7 @@ const Events = () => {
         });
 
         // Refresh events list
-        const eventsResponse = await fetch("http://localhost:5000/events");
+        const eventsResponse = await fetch(`${API_BASE_URL}/events`);
         const eventsData = await eventsResponse.json();
 
         if (eventsResponse.ok) {

@@ -14,14 +14,14 @@ const StudySessionDetails = () => {
     const fetchSessionDetails = async () => {
       try {
         const sessionResponse = await fetch(
-          `http://localhost:5000/sessions/${id}`
+          `https://learn-bridge-server-284wokn26.vercel.app/sessions/${id}`
         );
         const sessionData = await sessionResponse.json();
         console.log("Session Response:", sessionData);
         setSession(sessionData);
 
         const reviewsResponse = await fetch(
-          `http://localhost:5000/reviews?sessionId=${id}`
+          `https://learn-bridge-server-284wokn26.vercel.app/reviews?sessionId=${id}`
         );
         const reviewsData = await reviewsResponse.json();
         console.log("Reviews Response:", reviewsData);

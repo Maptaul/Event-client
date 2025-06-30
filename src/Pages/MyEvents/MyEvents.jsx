@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Providers/AuthProviderNew";
+import { API_BASE_URL } from "../../utils/api";
 
 const MyEvents = () => {
   const { user, getAuthToken } = useContext(AuthContext);
@@ -24,7 +25,7 @@ const MyEvents = () => {
     const fetchMyEvents = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/events/creator/${user.email}`
+          `${API_BASE_URL}/events/creator/${user.email}`
         );
         const data = await response.json();
 
@@ -82,7 +83,7 @@ const MyEvents = () => {
     try {
       const token = getAuthToken();
       const response = await fetch(
-        `http://localhost:5000/events/${editingEvent._id}`,
+        `${API_BASE_URL}/events/${editingEvent._id}`,
         {
           method: "PUT",
           headers: {
@@ -101,7 +102,7 @@ const MyEvents = () => {
       if (response.ok && data.success) {
         // Refresh events list
         const eventsResponse = await fetch(
-          `http://localhost:5000/events/creator/${user.email}`
+          `https://learn-bridge-server-284wokn26.vercel.app/events/creator/${user.email}`
         );
         const eventsData = await eventsResponse.json();
 
@@ -156,19 +157,22 @@ const MyEvents = () => {
 
     try {
       const token = getAuthToken();
-      const response = await fetch(`http://localhost:5000/events/${eventId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `https://learn-bridge-server-284wokn26.vercel.app/events/${eventId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok && data.success) {
         // Refresh events list
         const eventsResponse = await fetch(
-          `http://localhost:5000/events/creator/${user.email}`
+          `https://learn-bridge-server-284wokn26.vercel.app/events/creator/${user.email}`
         );
         const eventsData = await eventsResponse.json();
 

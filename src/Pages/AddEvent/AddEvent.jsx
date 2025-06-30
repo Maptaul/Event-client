@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Providers/AuthProviderNew";
+import { API_BASE_URL } from "../../utils/api";
 
 const AddEvent = () => {
   const { user, getAuthToken } = useContext(AuthContext);
@@ -45,7 +46,7 @@ const AddEvent = () => {
         throw new Error("Authentication token not found. Please log in again.");
       }
 
-      const response = await fetch("http://localhost:5000/events", {
+      const response = await fetch(`${API_BASE_URL}/events`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

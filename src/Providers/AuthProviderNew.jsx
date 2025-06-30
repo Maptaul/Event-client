@@ -1,9 +1,10 @@
 import { createContext, useEffect, useState } from "react";
+import { API_BASE_URL } from "../utils/api";
 
 export const AuthContext = createContext(null);
 
-// Backend API URL - adjust this to match your backend URL
-const API_BASE_URL = "http://localhost:5000"; // Change this to your deployed backend URL when needed
+// Backend API URL - using centralized configuration
+const API_URL = API_BASE_URL;
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -50,7 +51,7 @@ const AuthProvider = ({ children }) => {
           requestBody.photoURL = photoURL.trim();
         }
 
-        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        const response = await fetch(`${API_URL}/auth/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -105,7 +106,7 @@ const AuthProvider = ({ children }) => {
       setLoading(true);
 
       try {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        const response = await fetch(`${API_URL}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -167,7 +168,7 @@ const AuthProvider = ({ children }) => {
 
         if (token) {
           // Call backend logout endpoint
-          await fetch(`${API_BASE_URL}/auth/logout`, {
+          await fetch(`${API_URL}/auth/logout`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
