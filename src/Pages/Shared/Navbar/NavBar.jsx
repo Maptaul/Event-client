@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../src/Providers/AuthProvider";
+import { AuthContext } from "../../../../src/Providers/AuthProviderNew";
 import finalLogo from "../../../assets/Finallogo.png";
 
 const NavBar = () => {
@@ -12,16 +12,13 @@ const NavBar = () => {
         <Link to="/">Home</Link>
       </li>
       <li>
-        <Link to="/allStudySessions">All Study Sessions</Link>
+        <Link to="/events">Events</Link>
       </li>
       <li>
-        <Link to="/AllTutorSection">All Tutor</Link>
+        <Link to="/add-event">Add Event</Link>
       </li>
       <li>
-        <Link to="/aboutUs">About Us</Link>
-      </li>
-      <li>
-        <Link to="/contact">Contact Us</Link>
+        <Link to="/my-events">MY Event</Link>
       </li>
     </>
   );
@@ -66,7 +63,7 @@ const NavBar = () => {
           <Link to="/" className=" font-bold text-2xl">
             <div className="flex items-center">
               <img className="w-16 h-16" src={finalLogo} alt="" />
-              <h2 className="text-3xl font-bold">LearnBridge</h2>
+              <h2 className="text-3xl font-bold">Event Manager</h2>
             </div>
           </Link>
         </div>
@@ -92,13 +89,14 @@ const NavBar = () => {
                   tabIndex={0}
                   className="menu menu-sm dropdown-content bg-[#080A1A] text-white rounded-box shadow mt-3 w-auto p-4"
                 >
-                  <li className="text-center mb-2 rounded-md bg-[#e9e2e222]">
-                    <Link to="/dashboard">Dashboard </Link>
+                  <li className="text-center mb-2 rounded-md bg-[#e9e2e222] pointer-events-none">
+                    <span className="text-white font-medium">
+                      {user.displayName || user.email || "User"}
+                    </span>
                   </li>
-
                   <li>
                     <button onClick={handleLogout} className="bg-[#e9e2e222]">
-                      Log Out
+                      Logout
                     </button>
                   </li>
                 </ul>
@@ -109,7 +107,7 @@ const NavBar = () => {
               to="/login"
               className="btn btn-primary rounded-md px-8 text-xl"
             >
-              Login
+              Sign In
             </Link>
           )}
         </div>

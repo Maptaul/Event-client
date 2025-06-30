@@ -1,11 +1,11 @@
-# LearnBridge Client
+# Event Manager Client
 
-Welcome to the LearnBridge Client repository!
+Welcome to the Event Manager Client repository!
 
 ## Live Link
 
-Front-end Live Site Link: https://learnbridge-26280.web.app
-Back-end Live Site Link: https://learn-bridge-server-two.vercel.app
+Front-end Live Site Link: [Your deployed URL here]
+Back-end Live Site Link: [Your deployed backend URL here]
 
 ## Table of Contents
 
@@ -16,7 +16,16 @@ Back-end Live Site Link: https://learn-bridge-server-two.vercel.app
 
 ## Introduction
 
-The Collaborative Study Platform simplifies education by connecting students, tutors, and admins. It enables efficient study session management, resource sharing, and streamlined collaboration.
+The Event Manager platform simplifies event management by allowing users to create, join, and manage events. It provides a streamlined interface for event organization and participation.
+
+## Features
+
+### Core Features:
+- **User Authentication**: Custom authentication system without third-party packages
+- **Event Management**: Create, update, and delete events
+- **Event Discovery**: Browse and search events with filtering options
+- **Event Participation**: Join events and track attendee counts
+- **Responsive Design**: Mobile-friendly interface
 
 ## Features
 

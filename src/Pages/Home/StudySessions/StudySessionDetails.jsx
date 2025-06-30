@@ -1,36 +1,38 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../../Components/Loading";
-import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import { AuthContext } from "../../../Providers/AuthProvider";
+import { AuthContext } from "../../../Providers/AuthProviderNew";
 
 const StudySessionDetails = () => {
   const { id } = useParams();
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading, getAuthToken } = useContext(AuthContext);
   const [session, setSession] = useState(null);
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     const fetchSessionDetails = async () => {
       try {
-        const sessionResponse = await axiosSecure.get(`/sessions/${id}`);
-        console.log("Session Response:", sessionResponse.data);
-        setSession(sessionResponse.data);
-
-        const reviewsResponse = await axiosSecure.get(
-          `/reviews?sessionId=${id}`
+        const sessionResponse = await fetch(
+          `http://localhost:5000/sessions/${id}`
         );
-        console.log("Reviews Response:", reviewsResponse.data);
-        setReviews(reviewsResponse.data);
+        const sessionData = await sessionResponse.json();
+        console.log("Session Response:", sessionData);
+        setSession(sessionData);
+
+        const reviewsResponse = await fetch(
+          `http://localhost:5000/reviews?sessionId=${id}`
+        );
+        const reviewsData = await reviewsResponse.json();
+        console.log("Reviews Response:", reviewsData);
+        setReviews(reviewsData);
       } catch (error) {
         console.error("Error fetching session details:", error);
       }
     };
 
     fetchSessionDetails();
-  }, [id, axiosSecure]);
+  }, [id]);
 
   const getSessionStatus = (registrationStartDate, registrationEndDate) => {
     const currentDate = new Date();

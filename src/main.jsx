@@ -5,7 +5,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "./index.css";
-import AuthProvider from "./Providers/AuthProvider.jsx";
+import AuthProvider from "./Providers/AuthProviderNew.jsx";
 import { router } from "./Routes/Routes.jsx";
 const queryClient = new QueryClient();
 

@@ -7,10 +7,9 @@ const Footer = () => {
       <footer className="footer p-10 w-11/12 mx-auto bg-[#080A1A]  text-primary-content">
         <div>
           <img className="w-20 h-20" src={finalLogo} alt="" />
-          <h1 className="text-3xl font-bold">LearnBridge</h1>
+          <h1 className="text-3xl font-bold">Event Manager</h1>
           <p className="text-sm">
-            Streamlining study sessions, resources, and collaboration for modern
-            education.
+            Event Manager is a platform for managing and discovering events.
           </p>
           <p>© {new Date().getFullYear()} All Rights Reserved.</p>
         </div>
@@ -19,15 +18,15 @@ const Footer = () => {
           <Link className="link link-hover" to="/">
             Home
           </Link>
-          <Link className="link link-hover" to="/allStudySessions">
-            Study Sessions
+          <Link className="link link-hover" to="/events">
+            Events
           </Link>
-          <Link className="link link-hover" to="/AllTutorSection">
-            Tutors
+          <Link className="link link-hover" to="/add-event">
+            Add Event
           </Link>
-          <a className="link link-hover" href="/dashboard">
-            Dashboard
-          </a>
+          <Link className="link link-hover" to="/my-events">
+            My Events
+          </Link>
         </div>
         <div>
           <span className="footer-title">Contact Us</span>

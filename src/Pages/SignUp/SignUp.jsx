@@ -1,343 +1,291 @@
 import Lottie from "lottie-react";
 import { useContext, useState } from "react";
-import { useForm } from "react-hook-form";
-import { FaEye, FaEyeSlash, FaGithub, FaGoogle } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import registrationLottie from "../../assets/lottie/register.json";
-import { AuthContext } from "../../Providers/AuthProvider";
+import { AuthContext } from "../../Providers/AuthProviderNew";
 
 const SignUp = () => {
-  const { createUser, googleSignIn, updateUserProfile, githubSignIn } =
-    useContext(AuthContext);
+  const { createUser } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    photoURL: "",
+  });
   const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
+  // Handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Clear error when user starts typing
+    if (error) setError(null);
+  };
 
-  // Password validation function
-  const validatePassword = (password) => {
-    const upperCase = /[A-Z]/;
-    const lowerCase = /[a-z]/;
-    const minLength = 6;
+  // Validate form inputs
+  const validateForm = () => {
+    // Name validation
+    if (!formData.name.trim()) {
+      setError("Name is required");
+      return false;
+    }
+    if (formData.name.trim().length < 2) {
+      setError("Name must be at least 2 characters long");
+      return false;
+    }
 
-    if (!upperCase.test(password)) {
-      return "Password must include at least one uppercase letter.";
+    // Email validation
+    if (!formData.email.trim()) {
+      setError("Email is required");
+      return false;
     }
-    if (!lowerCase.test(password)) {
-      return "Password must include at least one lowercase letter.";
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setError("Please enter a valid email address");
+      return false;
     }
-    if (password.length < minLength) {
-      return "Password must be at least 6 characters long.";
+
+    // Password validation
+    if (!formData.password.trim()) {
+      setError("Password is required");
+      return false;
     }
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return false;
+    }
+    if (!/[A-Z]/.test(formData.password)) {
+      setError("Password must contain at least one uppercase letter");
+      return false;
+    }
+    if (!/[a-z]/.test(formData.password)) {
+      setError("Password must contain at least one lowercase letter");
+      return false;
+    }
+
+    // PhotoURL validation (optional but if provided, should be valid URL)
+    if (formData.photoURL.trim() && !/^https?:\/\/.+/.test(formData.photoURL)) {
+      setError(
+        "Please enter a valid photo URL (starting with http:// or https://)"
+      );
+      return false;
+    }
+
     return true;
   };
 
-  // Handle standard registration
-  const onSubmit = async (data) => {
-    const { name, email, photo, password, role } = data;
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!validateForm()) return;
+
+    setLoading(true);
 
     try {
-      // Create user with Firebase
-      const userCredential = await createUser(email, password);
-      const createdUser = userCredential.user;
-
-      // Update user profile
-      await updateUserProfile(name, photo);
-
-      // Save user data to the database
-      const newUser = {
-        name,
-        email,
-        photo,
-        role,
-        createdAt: new Date().toISOString(),
-      };
-      const response = await fetch(
-        "https://learn-bridge-server-two.vercel.app/users",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newUser),
-        }
+      const result = await createUser(
+        formData.email,
+        formData.password,
+        formData.name,
+        formData.photoURL
       );
 
-      if (response.ok) {
-        console.log("user added to the database");
-        reset();
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "User created successfully",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        navigate("/");
-      }
+      Swal.fire({
+        title: "Registration Successful!",
+        text: `Welcome to Event Manager, ${formData.name}!`,
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      navigate("/", { replace: true });
     } catch (error) {
-      console.error("Registration Error:", error);
-      toast.error("Error during registration. Please try again.");
-    }
-  };
+      console.error("Registration error:", error);
 
-  // Handle Google sign-in
-  const handleGoogleLogin = async () => {
-    try {
-      // Sign in with Google
-      const result = await googleSignIn();
-      const user = result.user;
+      // Handle custom auth errors
+      let errorMessage = "Registration failed. Please try again.";
 
-      if (user) {
-        // Extract user data
-        const { displayName: name, email, photoURL: photo } = user;
-
-        // Prepare user data
-        const newUser = {
-          name,
-          email,
-          photo,
-          role: "student", // Default role; adjust as needed
-          createdAt: new Date().toISOString(),
-        };
-
-        // Save user data to the database
-        const response = await fetch(
-          "https://learn-bridge-server-two.vercel.app/users",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newUser),
-          }
-        );
-
-        if (response.ok) {
-          toast.success("Google sign-in successful and data saved!");
-          navigate("/");
-        } else {
-          throw new Error("Failed to save user data.");
+      if (error.message) {
+        switch (error.message) {
+          case "Email and password are required":
+            errorMessage = "Please fill in all required fields.";
+            break;
+          case "Invalid email format":
+            errorMessage = "Please enter a valid email address.";
+            break;
+          case "An account with this email already exists":
+            errorMessage =
+              "This email is already registered. Please use a different email or try logging in.";
+            break;
+          case "Password must be at least 6 characters long":
+          case "Password must contain at least one uppercase letter":
+          case "Password must contain at least one lowercase letter":
+            errorMessage = error.message;
+            break;
+          default:
+            errorMessage = error.message;
         }
       }
-    } catch (error) {
-      console.error("Google Login Error:", error);
-      toast.error("Error during Google sign-in. Please try again.");
-    }
-  };
 
-  const handleGithubLogin = async () => {
-    try {
-      // Sign in with GitHub
-      const result = await githubSignIn();
-      const user = result.user;
-
-      if (user) {
-        // Extract user data
-        const name = user.displayName || "GitHub User";
-        const email = user.email || null; // GitHub email may be null
-        const photo = user.photoURL || "https://via.placeholder.com/150";
-
-        // Ensure email is present
-        if (!email) {
-          toast.error(
-            "GitHub account email is not available. Please use another method."
-          );
-          return;
-        }
-
-        // Prepare user data
-        const newUser = {
-          name,
-          email,
-          photo,
-          role: "student",
-          createdAt: new Date().toISOString(),
-        };
-
-        // Save user data to the database
-        const response = await fetch(
-          "https://learn-bridge-server-two.vercel.app/users",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newUser),
-          }
-        );
-
-        const responseData = await response.json();
-        console.log("📩 Server Response:", responseData);
-
-        if (response.ok) {
-          toast.success("✅ User registered successfully!");
-          reset();
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "User created successfully",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          navigate("/");
-        } else {
-          toast.error(`❌ Error: ${responseData.message}`);
-        }
-      }
-    } catch (error) {
-      console.error("GitHub Login Error:", error);
-      toast.error("Error during GitHub sign-in. Please try again.");
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen md:flex justify-center items-center mb-10">
+    <div className="min-h-screen md:flex justify-center items-center bg-gradient-to-br from-green-50 to-blue-100">
       <div className="text-center lg:text-left w-96">
-        <Lottie animationData={registrationLottie} loop />
+        <Lottie animationData={registrationLottie}></Lottie>
       </div>
-      <div className="card bg-base-100 w-full max-w-lg shrink-0 rounded-md p-10 text-black">
-        <h2 className="text-2xl font-semibold text-center">
-          Register Your Account
+
+      <div className="card bg-white w-full max-w-lg p-10 shadow-xl">
+        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+          Create Account
         </h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="card-body">
+        <p className="text-center text-gray-600 mb-8">Join Event Manager today</p>
+
+        {/* Error Display */}
+        {error && (
+          <div className="alert alert-error mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name Field */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-bold">Name</span>
+              <span className="label-text font-semibold">Full Name *</span>
             </label>
             <input
+              name="name"
               type="text"
-              placeholder="Name"
-              className="input input-bordered"
-              {...register("name", { required: "Name is required" })}
+              placeholder="Enter your full name"
+              className="input input-bordered w-full focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
             />
-            {errors.name && (
-              <span className="text-red-500 text-sm">
-                {errors.name.message}
-              </span>
-            )}
           </div>
 
           {/* Email Field */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-bold">Email</span>
+              <span className="label-text font-semibold">Email Address *</span>
             </label>
             <input
+              name="email"
               type="email"
-              placeholder="Email"
-              className="input input-bordered"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-                  message: "Invalid email format",
-                },
-              })}
+              placeholder="Enter your email"
+              className="input input-bordered w-full focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
             />
-            {errors.email && (
-              <span className="text-red-500 text-sm">
-                {errors.email.message}
-              </span>
-            )}
-          </div>
-
-          {/* Photo Field */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-bold">Photo URL</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Photo URL"
-              className="input input-bordered"
-              {...register("photo", { required: "Photo URL is required" })}
-            />
-            {errors.photo && (
-              <span className="text-red-500 text-sm">
-                {errors.photo.message}
-              </span>
-            )}
-          </div>
-
-          {/* Role Selection */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-bold">Select Role</span>
-            </label>
-            <select
-              className="select select-bordered"
-              {...register("role", { required: "Role selection is required" })}
-            >
-              <option value="" disabled>
-                Choose your role
-              </option>
-              <option value="student">Student</option>
-              <option value="tutor">Tutor</option>
-              <option value="admin">Admin</option>
-            </select>
-            {errors.role && (
-              <span className="text-red-500 text-sm">
-                {errors.role.message}
-              </span>
-            )}
           </div>
 
           {/* Password Field */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-bold">Password</span>
+              <span className="label-text font-semibold">Password *</span>
             </label>
             <div className="relative">
               <input
+                name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                className="input input-bordered w-full"
-                {...register("password", {
-                  validate: validatePassword,
-                })}
+                placeholder="Create a password"
+                className="input input-bordered w-full pr-12 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
               />
-              <span
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center pr-3"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+                {showPassword ? (
+                  <FaEyeSlash className="h-5 w-5 text-gray-400" />
+                ) : (
+                  <FaEye className="h-5 w-5 text-gray-400" />
+                )}
+              </button>
             </div>
-            {errors.password && (
-              <span className="text-red-500 text-sm">
-                {errors.password.message}
+            <label className="label">
+              <span className="label-text-alt text-gray-500">
+                Must be at least 6 characters with uppercase and lowercase
+                letters
               </span>
-            )}
+            </label>
+          </div>
+
+          {/* Photo URL Field */}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">
+                Profile Photo URL (Optional)
+              </span>
+            </label>
+            <input
+              name="photoURL"
+              type="url"
+              placeholder="https://example.com/your-photo.jpg (leave empty if none)"
+              className="input input-bordered w-full focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              value={formData.photoURL}
+              onChange={handleInputChange}
+            />
+            <label className="label">
+              <span className="label-text-alt text-gray-500">
+                Optional: URL to your profile picture. You can skip this field.
+              </span>
+            </label>
           </div>
 
           {/* Submit Button */}
-          <div className="form-control mt-6">
-            <button type="submit" className="btn btn-primary rounded-md">
-              Register
+          <div className="form-control mt-8">
+            <button
+              type="submit"
+              className={`btn btn-primary w-full text-lg ${
+                loading ? "loading" : ""
+              }`}
+              disabled={loading}
+            >
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </div>
         </form>
 
-        {/* Google Login Button */}
-        <div className="text-center mt-4">
-          <button onClick={handleGoogleLogin} className="btn btn-outline mr-2">
-            <FaGoogle className="mr-2" /> Register with Google
-          </button>
-          <button onClick={handleGithubLogin} className="btn btn-outline">
-            <FaGithub className="mr-2" /> Register with Github
-          </button>
+        {/* Login Link */}
+        <div className="text-center mt-6">
+          <p className="text-gray-600">
+            Already have an account?{" "}
+            <Link to="/login" className="link link-primary font-semibold">
+              Sign in here
+            </Link>
+          </p>
         </div>
-
-        {/* Redirect to Login */}
-        <p className="text-center text-black font-semibold mt-5">
-          Already have an account?{" "}
-          <Link className="text-red-500" to="/login">
-            Login
-          </Link>
-        </p>
       </div>
     </div>
   );
