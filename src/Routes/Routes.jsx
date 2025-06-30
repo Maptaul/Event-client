@@ -5,8 +5,8 @@ import ErrorPage from "../Pages/Error/ErrorPage";
 import Events from "../Pages/Events/Events";
 import Home from "../Pages/Home/Home/Home";
 import Login from "../Pages/Login/Login";
-import SignUp from "../Pages/SignUp/SignUp";
 import MyEvents from "../Pages/MyEvents/MyEvents";
+import SignUp from "../Pages/SignUp/SignUp";
 import PrivetRoute from "./PrivetRoute";
 
 export const router = createBrowserRouter([
